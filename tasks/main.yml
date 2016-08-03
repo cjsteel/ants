@@ -1,0 +1,36 @@
+---
+# tasks file for ansible-role-acemenu
+
+# see following
+#
+# http://stackoverflow.com/questions/33343215/how-to-get-remote-users-home-directory-in-ansible
+# http://stackoverflow.com/questions/21344777/how-to-switch-a-user-per-task-or-set-of-tasks
+
+# iterate to gather all of a systems regular users and save to list?
+
+
+# discover home directories including those mounted by LDAP
+
+- name:
+  shell: >
+    getent passwd {{ item }} | cut -d: -f6
+  changed_when: false
+  register: user_homes
+  with_items: acemenu_users
+
+- debug: msg="item.item={{item.item}}, item.stdout={{item.stdout}}, item.changed={{item.changed}}"
+  with_items: "{{user_homes.results}}"
+
+#- name: debug output
+#  debug: var=user_homes.stdout
+
+- name: ensure for remote directories
+  become: true
+  file:
+    state   : 'directory'
+    path    : '{{ item.stdout }}/{{ acemenu_personal_bin_dir }}'
+    owner   : 'csteel'
+    group   : 'csteel'
+    mode    : '0740'
+  with_items: "{{ user_homes.results }}"
+
