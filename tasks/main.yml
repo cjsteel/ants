@@ -29,8 +29,8 @@
   file:
     state   : 'directory'
     path    : '{{ item.stdout }}/{{ acemenu_personal_bin_dir }}'
-    owner   : 'csteel'
-    group   : 'csteel'
+    owner   : '{{ item.stdout | basename }}'
+    group   : '{{ item.stdout | basename }}'
     mode    : '0740'
   with_items: "{{ user_homes.results }}"
 
