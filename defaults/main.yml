@@ -1,25 +1,5 @@
 ---
 # defaults file for ansible-role-acemenu
 
-acemenu_user: csteel
-
 acemenu_users :
-  - csteel
-  - aceadmin
-
-
-acemenu_personal_bin_dir : 'bin/scripts'
-
-acemenu_user_files:
-
-  acemenu_personal_scripts_dir_for_csteel:
-
-      state   : 'directory'
-      path    : 'bin/scripts'
-      owner   : 'csteel'
-      group   : 'csteel'
-      mode    : '0740'
-#      recurse : '{{ item.value.recurse | default(omit) }}'
-
-# we can not specify the users full home dir path here due to the way the ansible become directive works.
-
+  - bob

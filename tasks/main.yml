@@ -21,16 +21,51 @@
 - debug: msg="item.item={{item.item}}, item.stdout={{item.stdout}}, item.changed={{item.changed}}"
   with_items: "{{user_homes.results}}"
 
-#- name: debug output
-#  debug: var=user_homes.stdout
+- name: debug output
+  debug: var=user_homes.stdout
 
 - name: ensure for remote directories
-  become: true
+  become: '{{ item.stdout | basename }}'
   file:
     state   : 'directory'
-    path    : '{{ item.stdout }}/{{ acemenu_personal_bin_dir }}'
+    path    : '{{ item.stdout }}/bin/acemenu'
     owner   : '{{ item.stdout | basename }}'
     group   : '{{ item.stdout | basename }}'
     mode    : '0740'
+  with_items: "{{ user_homes.results }}"
+
+- name: "copy our menu files"
+  become: '{{ item.stdout | basename }}'
+  copy:
+    src: 'acemenu/menu.sh'
+    dest: '{{ item.stdout }}/bin/acemenu/menu'
+    directory_mode: true
+    owner   : '{{ item.stdout | basename }}'
+    group   : '{{ item.stdout | basename }}'
+    mode    : '0740'
+  with_items: "{{ user_homes.results }}"
+
+- name: "copy menuitems.txt to users acemenu dir"
+  become: '{{ item.stdout | basename }}'
+  copy:
+    src: 'acemenu/menuitems.txt'
+    dest: '{{ item.stdout }}/bin/acemenu/menuitems.txt'
+    directory_mode: true
+    owner   : '{{ item.stdout | basename }}'
+    group   : '{{ item.stdout | basename }}'
+    mode    : '0740'
+  with_items: "{{ user_homes.results }}"
+
+- name: "ensure for our path block in ~/.bashrc"
+  become: '{{ item.stdout | basename }}'
+  blockinfile:
+    dest: '{{ item.stdout }}/.bashrc'
+    marker: '# {mark} ANSIBLE MANAGED BLOCK'
+    insertafter: EOF
+    block: |
+      # set PATH to include '{{ item.stdout }}/bin/acemenu'
+      if [ -d /home/cjs/bin/acemenu ] ; then
+         PATH=/home/cjs/bin/acemenu:${PATH} 
+      fi
   with_items: "{{ user_homes.results }}"
 
