@@ -28,32 +28,32 @@
   become: '{{ item.stdout | basename }}'
   file:
     state   : 'directory'
-    path    : '{{ item.stdout }}/bin/acemenu'
+    path    : '{{ item.stdout }}/{{ acemenu_bin_dir }}'
     owner   : '{{ item.stdout | basename }}'
     group   : '{{ item.stdout | basename }}'
     mode    : '0740'
   with_items: "{{ user_homes.results }}"
 
-- name: "copy our menu files"
+- name: "template our menu script"
   become: '{{ item.stdout | basename }}'
-  copy:
-    src: 'acemenu/menu.sh'
-    dest: '{{ item.stdout }}/bin/acemenu/menu'
-    directory_mode: true
+  template:
+    backup  : yes
+    src     : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.j2'
+    dest    : '{{ item.stdout }}/{{ acemenu_bin_dir }}/menu'
     owner   : '{{ item.stdout | basename }}'
     group   : '{{ item.stdout | basename }}'
     mode    : '0740'
   with_items: "{{ user_homes.results }}"
 
-- name: "copy menuitems.txt to users acemenu dir"
+- name: "template our menu items"
   become: '{{ item.stdout | basename }}'
-  copy:
-    src: 'acemenu/menuitems.txt'
-    dest: '{{ item.stdout }}/bin/acemenu/menuitems.txt'
-    directory_mode: true
+  template:
+    backup  : yes
+    src     : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menuitems.j2'
+    dest    : '{{ item.stdout }}/{{ acemenu_bin_dir }}/menuitems.txt'
     owner   : '{{ item.stdout | basename }}'
     group   : '{{ item.stdout | basename }}'
-    mode    : '0740'
+    mode    : '0640'
   with_items: "{{ user_homes.results }}"
 
 - name: "ensure for our path block in ~/.bashrc"
@@ -63,9 +63,9 @@
     marker: '# {mark} ANSIBLE MANAGED BLOCK'
     insertafter: EOF
     block: |
-      # set PATH to include '{{ item.stdout }}/bin/acemenu'
-      if [ -d /home/cjs/bin/acemenu ] ; then
-         PATH=/home/cjs/bin/acemenu:${PATH} 
+      # set PATH to include '{{ item.stdout }}/{{ acemenu_bin_dir }}'
+      if [ -d {{ item.stdout }}/{{ acemenu_bin_dir }} ] ; then
+         PATH={{ item.stdout }}/{{ acemenu_bin_dir }}:${PATH} 
       fi
   with_items: "{{ user_homes.results }}"
 

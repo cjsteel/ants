@@ -3,3 +3,5 @@
 
 acemenu_users :
   - bob
+
+acemenu_bin_dir: 'bin/acemenu'
