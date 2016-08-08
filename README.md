@@ -1,7 +1,7 @@
-Role Name
-=========
+acemenu
+=======
 
-A brief description of the role goes here.
+An Ansible role that installs a very basic terminal based menu system.
 
 Requirements
 ------------
