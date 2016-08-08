@@ -10,7 +10,7 @@ Requirements
 
 * Ansible version 2.0.
 
-    * MAkes use of `blockinfile` extras module
+    * Makes use of `blockinfile` extras module
 
 Role Variables
 --------------
