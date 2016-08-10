@@ -26,34 +26,21 @@
 #    Start a terminal session and enter:
 #
 #        menu
-
-PS3='Choose your favorite vegetable: ' # Sets the prompt string.
+clear
+PS3='Select the number and then press return: ' # Sets the prompt string.
                                        # Otherwise it defaults to #? .
-
-#MENUITEMS='"beans" "carrots" "potatoes" "onions" "rutabagas"'
 MENUITEMS=""
 while IFS=$'
 ' read -r line || [[ -n "$line" ]]; do
    MENUITEMS="$MENUITEMS $line"
 done < "{{ item.stdout }}/{{ acemenu_bin_dir }}/menuitems.txt"
-#echo $ITEMS
 echo
 
-select vegetable in $MENUITEMS
+select menuitem in $MENUITEMS
 do
-  cat $vegetable.txt
-  echo
-  echo "Your favorite veggie is $vegetable."
-  echo "Yuck!"
-  echo
+  clear
+  cat "{{ item.stdout }}/{{ acemenu_bin_dir }}/helpfiles/${menuitem}.txt"
   break  # What happens if there is no 'break' here?
 done
-
 exit
 
-# Exercise:
-# --------
-#  Fix this script to accept user input not specified in
-#+ the "select" statement.
-#  For example, if the user inputs "peas,"
-#+ the script would respond "Sorry. That is not on the menu."
