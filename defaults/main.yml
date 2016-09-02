@@ -1,7 +1,6 @@
 ---
 # defaults file for ansible-role-acemenu
 
-acemenu_users :
-  - bob
+acemenu_uid_min: 1000
 
 acemenu_bin_dir: 'bin/acemenu'

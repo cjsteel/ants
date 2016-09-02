@@ -2,6 +2,42 @@
 
 ## References
 
+### Untested
+
+*[](http://stackoverflow.com/questions/33343215/how-to-get-remote-users-home-directory-in-ansible)
+
+#### Ansible getent Example
+
+Create a simple playbook named: playbooks/ad-hoc/get-user-homedir.yml
+
+- hosts: all
+  tasks:
+    - name:
+      shell: >
+        getent passwd {{ user }} | cut -d: -f6
+      changed_when: false
+      register: user_home
+
+    - name: debug output
+      debug: var=user_home.stdout
+
+#### You can use expanduser.
+(this probably does not work)
+
+For instance, while looping over a user list:
+
+- name: Deploys .bashrc
+  template:
+    src: bashrc.j2
+    dest: "{{ '~' + item | expanduser }}/.bashrc"
+    mode: 0640
+    owner: "{{ item }}"
+    group: "{{ item }}"
+  with_items: user_list
+
+
+
+### 
 * [](http://stackoverflow.com/questions/35605603/using-ansible-set-fact-to-create-a-dictionary-from-register-results)
 
 ## Notes
@@ -114,4 +150,43 @@ awk -F':' -v "min=${l##UID_MIN}" -v "max=${l1##UID_MAX}" '{ if ( !($3 >= min && 
 
 #### ensure for our path block in the users ~/.bashrc
 
+# see following
+#
+# http://stackoverflow.com/questions/33343215/how-to-get-remote-users-home-directory-in-ansible
+# http://stackoverflow.com/questions/21344777/how-to-switch-a-user-per-task-or-set-of-tasks
 
+# * [ User-friendly command to list all users on Ubuntu system? ]( http://unix.stackexchange.com/questions/63509/user-friendly-command-to-list-all-users-on-ubuntu-system )
+
+# Get list of users with passwords
+
+# sudo grep -vE '^[^*!]+:[*!]:' /etc/shadow | sort | cut -d: -f1
+# Breakdown
+# Only show users which have a password set:
+#
+#    sudo grep -vE '^[^*!]+:[*!]:' /etc/shadow
+#
+# Sort by username:
+#
+#    sort 
+# * [ Linux user list & UID / bash layer ](http://stackoverflow.com/questions/20269008/linux-user-list-uid-bash-layer)
+# *[]() 
+# list only usernames
+#
+#    awk -F':' '{ print $1}' /etc/passwd
+#
+# Discard all information except for the username:
+#
+#    cut -d: -f1
+#
+# http://www.cyberciti.biz/faq/linux-list-users-command/
+#
+#
+#  grep "^UID_MIN" /etc/login.defs
+#  grep UID_MIN /etc/login.defs
+# awk -F':' -v "min=1000" -v "max=60000" '{ if ( $3 >= min && $3 <= max ) print $0}' /etc/passwd | cut -d: -f1
+
+- name: "get remote systems users by UID range"
+  shell: >
+    awk -F':' -v "min=500" -v "max=60000" '{ if ( $3 >= min && $3 <= max ) print $0}' /etc/passwd | cut -d: -f1
+  changed_when: false
+  register: users_by_range
