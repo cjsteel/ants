@@ -1,31 +1,37 @@
 ---
 # tasks file for ansible-role-acemenu
 
-# see following
-#
-# http://stackoverflow.com/questions/33343215/how-to-get-remote-users-home-directory-in-ansible
-# http://stackoverflow.com/questions/21344777/how-to-switch-a-user-per-task-or-set-of-tasks
+- name: "get remote systems users by UID range"
+  shell: >
+    awk -F':' -v "min={{ acemenu_uid_min }}" -v "max=60000" '{ if ( $3 >= min && $3 <= max ) print $0}' /etc/passwd | cut -d: -f1
+  changed_when: false
+  register: users_by_range
 
-# iterate to gather all of a systems regular users and save to list?
+- name: "debug: var=users_by_range"
+  debug: var=users_by_range
 
+- name: "debug: var=users_by_range.stdout_lines"
+  debug: var=users_by_range.stdout_lines
 
 # discover home directories including those mounted by LDAP
 
-- name:
+- name: "discover home directories including those mounted by LDAP"
   shell: >
     getent passwd {{ item }} | cut -d: -f6
   changed_when: false
   register: user_homes
-  with_items: acemenu_users
+  with_items: users_by_range.stdout_lines
+#  with_items: acemenu_users
 
-- debug: msg="item.item={{item.item}}, item.stdout={{item.stdout}}, item.changed={{item.changed}}"
+- name: 'Debug: msg="item.item={{item.item}}, item.stdout={{item.stdout}}, item.changed={{item.changed}}'
+  debug: msg="item.item={{item.item}}, item.stdout={{item.stdout}}, item.changed={{item.changed}}"
   with_items: "{{user_homes.results}}"
 
-- name: debug output
-  debug: var=user_homes.stdout
+- name: "  debug: var=user_homes"
+  debug: var=user_homes.results
 
 - name: ensure for remote directories
-  become: '{{ item.stdout | basename }}'
+  become: true
   file:
     state   : 'directory'
     path    : '{{ item.stdout }}/{{ acemenu_bin_dir }}'
@@ -34,7 +40,19 @@
     mode    : '0740'
   with_items: "{{ user_homes.results }}"
 
-- name: "template our menu script"
+- name: 'when ansible_distribution == "CentOS", template our menu script'
+  become: true
+  template:
+    backup  : yes
+    src     : '{{ ansible_distribution }}/{{ ansible_distribution_major_version }}/acemenu/menu.j2'
+    dest    : '{{ item.stdout }}/{{ acemenu_bin_dir }}/menu'
+    owner   : '{{ item.stdout | basename }}'
+    group   : '{{ item.stdout | basename }}'
+    mode    : '0740'
+  with_items: "{{ user_homes.results }}"
+  when: ansible_distribution == "CentOS" 
+
+- name: 'when ansible_distribution == "Ubuntu", template our menu script'
   become: '{{ item.stdout | basename }}'
   template:
     backup  : yes
@@ -44,9 +62,10 @@
     group   : '{{ item.stdout | basename }}'
     mode    : '0740'
   with_items: "{{ user_homes.results }}"
+  when: ansible_distribution == "Ubuntu" 
 
-- name: "template our menu items"
-  become: '{{ item.stdout | basename }}'
+- name: 'when ansible_distribution == "Ubuntu", template our menu items'
+  become: true
   template:
     backup  : yes
     src     : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menuitems.j2'
@@ -55,13 +74,34 @@
     group   : '{{ item.stdout | basename }}'
     mode    : '0640'
   with_items: "{{ user_homes.results }}"
+  when: ansible_distribution == "Ubuntu" 
+
+- name: 'when ansible_distribution == "CentOS", template our menu items'
+  become: true
+  template:
+    backup  : yes
+    src     : '{{ ansible_distribution }}/{{ ansible_distribution_major_version }}/acemenu/menuitems.j2'
+    dest    : '{{ item.stdout }}/{{ acemenu_bin_dir }}/menuitems.txt'
+    owner   : '{{ item.stdout | basename }}'
+    group   : '{{ item.stdout | basename }}'
+    mode    : '0640'
+  with_items: "{{ user_homes.results }}"
+  when: ansible_distribution == "CentOS" 
+
+# .bashrc
+#
+# Currently if the user does not have a .bashrc this module fails in order to aid in the identification
+# of issues where 'non-standard/regular' users have been setup on the target host.
 
 - name: "ensure for our path block in ~/.bashrc"
-  become: '{{ item.stdout | basename }}'
+  become: true
   blockinfile:
     dest: '{{ item.stdout }}/.bashrc'
+    owner   : '{{ item.stdout | basename }}'
+    group   : '{{ item.stdout | basename }}'
+    mode    : '0644'
+    state   : 'present'
     marker: '# {mark} ANSIBLE MANAGED BLOCK'
-    insertafter: EOF
     block: |
       # set PATH to include '{{ item.stdout }}/{{ acemenu_bin_dir }}'
       if [ -d {{ item.stdout }}/{{ acemenu_bin_dir }} ] ; then
@@ -69,3 +109,50 @@
       fi
   with_items: "{{ user_homes.results }}"
 
+# if the above did not fail and halt execution then we will create ~/.bash_aliases
+# and an entry for it in ~/.bashrc
+
+- name: "ensure for ~/.bash_aliases source in ~/.bashrc"
+  become: true
+  blockinfile:
+    dest: '{{ item.stdout }}/.bashrc'
+    owner   : '{{ item.stdout | basename }}'
+    group   : '{{ item.stdout | basename }}'
+    mode    : '0644'
+    state   : 'present'
+    marker: '# {mark} ANSIBLE MANAGED BLOCK'
+    block: |
+      # Alias definitions.
+      # You may want to put all your additions into a separate file like
+      # ~/.bash_aliases, instead of adding them here directly.
+      # See /usr/share/doc/bash-doc/examples in the bash-doc package.
+      
+      if [ -f ~/.bash_aliases ]; then
+          . ~/.bash_aliases
+      fi
+  with_items: "{{ user_homes.results }}"
+
+- name: "ensure for ~/.bash_aliases"
+  become: true
+  file:
+    state   : 'touch'
+    path    : '{{ item.stdout }}/.bash_aliases'
+    owner   : '{{ item.stdout | basename }}'
+    group   : '{{ item.stdout | basename }}'
+    mode    : '0644'
+  with_items: "{{ user_homes.results }}"
+
+- name: "ensure for menu message block in ~/.bash_aliases"
+  become: true
+  blockinfile:
+    dest: '{{ item.stdout }}/.bash_aliases'
+    owner   : '{{ item.stdout | basename }}'
+    group   : '{{ item.stdout | basename }}'
+    mode    : '0644'
+    create  : 'yes'
+    state   : 'present'
+    marker: '# {mark} ANSIBLE MANAGED BLOCK'
+    insertafter: EOF
+    block: |
+      echo "Enter 'acemenu' followed by the 'Enter' key for the ACElab menu system"
+  with_items: "{{ user_homes.results }}"
