@@ -3,7 +3,7 @@
 
 - name: "get remote systems users by UID range"
   shell: >
-    awk -F':' -v "min={{ acemenu_uid_min }}" -v "max=60000" '{ if ( $3 >= min && $3 <= max ) print $0}' /etc/passwd | cut -d: -f1
+    awk -F':' -v "min={{ acemenu_uid_min }}" -v "max={{ acemenu_uid_max }}" '{ if ( $3 >= min && $3 <= max ) print $0}' /etc/passwd | cut -d: -f1
   changed_when: false
   register: users_by_range
 
@@ -101,6 +101,7 @@
     group   : '{{ item.stdout | basename }}'
     mode    : '0644'
     state   : 'present'
+    insertafter: EOF
     marker: '# {mark} ANSIBLE MANAGED BLOCK'
     block: |
       # set PATH to include '{{ item.stdout }}/{{ acemenu_bin_dir }}'
@@ -108,6 +109,7 @@
          PATH={{ item.stdout }}/{{ acemenu_bin_dir }}:${PATH} 
       fi
   with_items: "{{ user_homes.results }}"
+  when: ansible_distribution == "Ubuntu" 
 
 # if the above did not fail and halt execution then we will create ~/.bash_aliases
 # and an entry for it in ~/.bashrc
@@ -120,17 +122,20 @@
     group   : '{{ item.stdout | basename }}'
     mode    : '0644'
     state   : 'present'
+    insertafter: EOF
     marker: '# {mark} ANSIBLE MANAGED BLOCK'
     block: |
-      # Alias definitions.
-      # You may want to put all your additions into a separate file like
-      # ~/.bash_aliases, instead of adding them here directly.
-      # See /usr/share/doc/bash-doc/examples in the bash-doc package.
-      
+      # add source ~/.bash_aliases to ~/.bashrc
+      #
       if [ -f ~/.bash_aliases ]; then
           . ~/.bash_aliases
       fi
+      # set PATH to include '{{ item.stdout }}/{{ acemenu_bin_dir }}'
+      if [ -d {{ item.stdout }}/{{ acemenu_bin_dir }} ] ; then
+         PATH={{ item.stdout }}/{{ acemenu_bin_dir }}:${PATH} 
+      fi
   with_items: "{{ user_homes.results }}"
+  when: ansible_distribution == "CentOS" 
 
 - name: "ensure for ~/.bash_aliases"
   become: true
@@ -154,5 +159,5 @@
     marker: '# {mark} ANSIBLE MANAGED BLOCK'
     insertafter: EOF
     block: |
-      echo "Enter 'acemenu' followed by the 'Enter' key for the ACElab menu system"
+      alias aceactivate='source activate ansible-1.9.0.1'
   with_items: "{{ user_homes.results }}"
