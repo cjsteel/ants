@@ -1,8 +1,0 @@
----
-# file: host_vars/hostname/acemenu/acemenu_users
-
-# The `acemenu_users` variable includes the user_names on the target host that will have an installtion of acemenu.
-
-acemenu.yml:
-      - user_one
-      - user_two

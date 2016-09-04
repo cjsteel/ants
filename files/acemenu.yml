@@ -1,6 +1,6 @@
 ---
 - hosts: acemenu
-  become: false
-  gather_facts: false
+  become: true
+  gather_facts: true
   roles:
     - acemenu
