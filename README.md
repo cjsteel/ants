@@ -92,22 +92,21 @@ Ansible Command
 
 ### Problem
 
-Once the role is run trying to rerun the role results in the following error
+If rerunning the role results in the following error ensure that you have not added an `echo` command to the deployment users ~/.bashrc, ~/.bash_aliases, ~/.bash_profile or other file that is executed upon login:
 
-(_test) your_controller_user@automa:~/projects/ace_testing/ace_ansible$ ansible-playbook testing_parc.yml -i inventory_dev
-
-PLAY [all] *********************************************************************
-
-PLAY [acemenu] *****************************************************************
-
-TASK [setup] *******************************************************************
-fatal: [web]: UNREACHABLE! => {"changed": false, "msg": "SSH Error: data could not be sent to the remote host. Make sure this host can be reached over ssh", "unreachable": true}
- [WARNING]: Could not create retry file 'testing_parc.retry'.         [Errno 2] No such file or directory: ''
-
-
-PLAY RECAP *********************************************************************
-web                        : ok=0    changed=0    unreachable=1    failed=0
-
+    (_test) your_controller_user@automa:~/projects/ace_testing/ace_ansible$ ansible-playbook testing_parc.yml -i inventory_dev
+    
+    PLAY [all] *********************************************************************
+    
+    PLAY [acemenu] *****************************************************************
+    
+    TASK [setup] *******************************************************************
+    fatal: [web]: UNREACHABLE! => {"changed": false, "msg": "SSH Error: data could not be sent to the remote host. Make sure this host can be reached over ssh", "unreachable": true}
+     [WARNING]: Could not create retry file 'testing_parc.retry'.         [Errno 2] No such file or directory: ''
+    
+    
+    PLAY RECAP *********************************************************************
+    web                        : ok=0    changed=0    unreachable=1    failed=0
 
 License
 -------
