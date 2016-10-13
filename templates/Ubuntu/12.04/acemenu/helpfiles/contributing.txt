@@ -1,0 +1,18 @@
+Contributing
+============
+
+As part of our open science initiative we invite you to share recommendations
+of commands that you have you found to be helpful in your work. You may 
+contribute them via the GLPI ticketing system or by emailing a member of
+the ACElabs IT team.
+
+Include the name of the command or concept as well as any options you have 
+found to be particualrly helpful.
+
+A short help that fits in a single terminal screen, such as this one, would
+be greatfully appreciated as well.
+
+Regards,
+
+The ACElabs IT, Research and Development Teams
+
