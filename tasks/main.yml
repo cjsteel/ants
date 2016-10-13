@@ -40,6 +40,16 @@
     mode=0775
   with_items: "{{ user_homes.results }}"
 
+- name: "ensure for remote users bin/acemenu/helpfiles directory"
+  become: true
+  file:
+    state='directory'
+    path='{{ item.stdout }}/{{ acemenu_help_dir }}'
+    owner='{{ item.stdout | basename }}'
+    group='{{ item.stdout | basename }}'
+    mode=0775
+  with_items: "{{ user_homes.results }}"
+
 #  file: path=/etc/foo.conf owner=foo group=foo mode=0644
 
 
@@ -91,6 +101,35 @@
     mode    : '0640'
   with_items: "{{ user_homes.results }}"
   when: ansible_distribution == "CentOS" 
+
+# helpfiles
+
+- name: 'copy over our help files'
+  become: true
+  copy:
+    backup  : no
+    force   : yes # overwrites any existing file(s).
+    src     : 'templates/{{ ansible_distribution }}/{{ ansible_distribution_major_version }}/acemenu/helpfiles/'
+    dest    : '{{ item.stdout }}/{{ acemenu_bin_dir }}/helpfiles/'
+    owner   : '{{ item.stdout | basename }}'
+    group   : '{{ item.stdout | basename }}'
+    mode    : '0640'
+  with_items: "{{ user_homes.results }}"
+  when: ansible_distribution == "CentOS"
+
+- name: 'copy over our help files'
+  become: true
+  copy:
+    directory_mode : yes
+    backup  : no
+    force   : yes # overwrites any existing file(s)
+    src     : 'templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/helpfiles/'
+    dest    : '{{ item.stdout }}/{{ acemenu_bin_dir }}/helpfiles/'
+    owner   : '{{ item.stdout | basename }}'
+    group   : '{{ item.stdout | basename }}'
+    mode    : '0640'
+  with_items: "{{ user_homes.results }}"
+  when: ansible_distribution == "Ubuntu"
 
 # .bashrc
 #

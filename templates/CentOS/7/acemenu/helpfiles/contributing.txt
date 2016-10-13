@@ -1,16 +1,16 @@
 Contributing
 ============
+If you are interested in contributing see our github project:
 
-As part of our open science initiative we invite you to share recommendations
-of commands that you have you found to be helpful in your work. You may 
-contribute them via the GLPI ticketing system or by emailing a member of
-the ACElabs IT team.
+    "ansible-role-acemenu"
 
-Include the name of the command or concept as well as any options you have 
-found to be particualrly helpful.
+* create a clone of the project
+* create a (short) help file and name it using a single word followed by .txt
+* add your help file to the helpfiles directory.
+* append the title (name without .txt) to the menuitems.j2 template(s).
+* make a pull request.
 
-A short help that fits in a single terminal screen, such as this one, would
-be greatfully appreciated as well.
+Subjects might include; useful commands, cheat sheets, concise overviews... 
 
 Regards,
 

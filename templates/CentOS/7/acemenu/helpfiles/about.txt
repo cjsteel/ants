@@ -1,19 +1,17 @@
-About acemenu
--------------
+acemenu
+-------
 
-acemenu is a terminal (command line) based learning system to introduce
-terminal base commands and options.
+acemenu is a terminal based menu systems.
 
-Usage
-=====
+menu command
+============
 
-To invoke the acemenu at any time type `menu` in your terminal session.
+To invoke the acemenu type: menu
 
-The **clear** Command
-=====================
+clear command
+=============
  
-Entering `clear` (without the back ticks) at the terminal command prompt clears
-the terminal of commands and output.
+Entering `clear` (without the back ticks) will clear your terminal session of all output.
 
 Best Regards,
 
