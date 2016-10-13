@@ -30,15 +30,18 @@
 - name: "  debug: var=user_homes"
   debug: var=user_homes.results
 
-- name: ensure for remote directories
+- name: "ensure for remote users bin/acemenu directory"
   become: true
   file:
-    state   : 'directory'
-    path    : '{{ item.stdout }}/{{ acemenu_bin_dir }}'
-    owner   : '{{ item.stdout | basename }}'
-    group   : '{{ item.stdout | basename }}'
-    mode    : '0740'
+    state='directory'
+    path='{{ item.stdout }}/{{ acemenu_bin_dir }}'
+    owner='{{ item.stdout | basename }}'
+    group='{{ item.stdout | basename }}'
+    mode=0775
   with_items: "{{ user_homes.results }}"
+
+#  file: path=/etc/foo.conf owner=foo group=foo mode=0644
+
 
 - name: 'when ansible_distribution == "CentOS", template our menu script'
   become: true
@@ -53,7 +56,8 @@
   when: ansible_distribution == "CentOS" 
 
 - name: 'when ansible_distribution == "Ubuntu", template our menu script'
-  become: '{{ item.stdout | basename }}'
+  become: true
+#  become: '{{ item.stdout | basename }}'
   template:
     backup  : yes
     src     : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.j2'

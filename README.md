@@ -32,9 +32,33 @@ Currently makes use of the following three variables in defaults/main.yml. `acem
     # defaults file for ansible-role-acemenu
     
     acemenu_uid_min: 1000
-    acemenu_uid_max: 60000
-    
+    acemenu_uid_max: 60000 
     acemenu_bin_dir: 'bin/acemenu'
+
+### group_vars
+
+To create a group_vars entry do something like this depending on the desired results..
+
+    mkdir -p group_vars/acemenu
+    cp roles/acemenu/defaults/main.yml group_vars/acemenu/defaults.yml
+
+Edit as desired:
+
+    nano group_vars/acemenu/defaults.yml
+
+### host_vars
+
+    mkdir -p host_vars/host-01/acemenu
+    cp roles/acemenu/defaults/main.yml host_vars/host-01/acemenu/defaults.yml
+    nano host_vars/host-01/acemenu/defaults.yml
+
+### user_vars
+NOT IMPLEMENTED
+
+    mkdir -p user_vars/<username>/acemenu
+    cp roles/acemenu/defaults/main.yml user_vars/<username>/acemenu/defaults.yml
+    nano host_vars/host-01/acemenu/defaults.yml
+
 
 Dependencies
 ------------
@@ -59,7 +83,9 @@ Playbooks
 
 ### Main Playbook
 
-In your main playbook, named `testing_parc.yml` in this example, you want something like the following example:
+In your main playbook, named `systems.yml` in this example, you want something like the following example:
+
+#### systems.yml
 
     ---
     - hosts: all
@@ -67,6 +93,10 @@ In your main playbook, named `testing_parc.yml` in this example, you want someth
       gather_facts: false
     
     - include: acemenu.yml
+
+To copy this example from the role:
+
+    cp roles/acemenu/files/systems.yml systems.yml
 
 ### Role Playbook
 
@@ -88,13 +118,13 @@ Notice that the `gather_facts` variable is set to `true` so that we may determin
 Ansible Command
 ---------------
 
-    ansible-playbook testing_parc.yml -i inventory_dev
+    ansible-playbook systems.yml -i inventory/development
 
 ### Problem
 
 If rerunning the role results in the following error ensure that you have not added an `echo` command to the deployment users ~/.bashrc, ~/.bash_aliases, ~/.bash_profile or other file that is executed upon login:
 
-    (_test) your_controller_user@automa:~/projects/ace_testing/ace_ansible$ ansible-playbook testing_parc.yml -i inventory_dev
+    (_test) your_controller_user@automa:~/projects/ace_testing/ace_ansible$ ansible-playbook systems.yml -i inventory_dev
     
     PLAY [all] *********************************************************************
     
