@@ -147,6 +147,3 @@ Author Information
 ------------------
 
 Christopher Steel
-create_project test
-create_project test
-create_project test
