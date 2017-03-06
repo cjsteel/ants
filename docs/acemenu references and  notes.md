@@ -10,22 +10,27 @@
 
 Create a simple playbook named: playbooks/ad-hoc/get-user-homedir.yml
 
-- hosts: all
-  tasks:
-    - name:
-      shell: >
-        getent passwd {{ user }} | cut -d: -f6
-      changed_when: false
-      register: user_home
+```yaml
+hosts: all
+tasks:
+ - name:
+   shell: >
+     getent passwd {{ user }} | cut -d: -f6
+   changed_when: false
+   register: user_home
+   
+ - name: debug output
+   debug: var=user_home.stdout
+```
 
-    - name: debug output
-      debug: var=user_home.stdout
+
 
 #### You can use expanduser.
 (this probably does not work)
 
 For instance, while looping over a user list:
 
+```yaml
 - name: Deploys .bashrc
   template:
     src: bashrc.j2
@@ -34,8 +39,7 @@ For instance, while looping over a user list:
     owner: "{{ item }}"
     group: "{{ item }}"
   with_items: user_list
-
-
+```
 
 ### 
 * [](http://stackoverflow.com/questions/35605603/using-ansible-set-fact-to-create-a-dictionary-from-register-results)
@@ -47,15 +51,22 @@ For instance, while looping over a user list:
 
 ## Variables
 
+```yaml
 acemenu_users: []
 acemenu_root_dir: '$HOME/bin/scripts/'
+```
 
 ## Gather all users on system
 
+```shell
     awk -F':' '{ print $1}' /etc/passwd
-    
-    getent passwd ansible | cut -d: -f1
+```
 
+```shell
+getent passwd ansible | cut -d: -f1
+```
+
+```shell
 ## Intersecting script?
 
 #!/bin/bash
@@ -63,15 +74,19 @@ acemenu_root_dir: '$HOME/bin/scripts/'
 for i in {000..999}; do 
     getent passwd "e${i}" 2> test.txt
 done
+```
 
 ## get minimum UID on a system
 
+```shell
     grep UID_MIN /etc/login.defs
-
+```
 ### output example
 
+```shell
     UID_MIN			 1000
     #SYS_UID_MIN		  100
+```
 
 ## References
 
@@ -80,11 +95,15 @@ done
 
 ## get UID limit ##
 
-    l=$(grep "^UID_MIN" /etc/login.defs)
+```shell
+l=$(grep "^UID_MIN" /etc/login.defs)
+```
 
 ## use awk to print if UID >= $UID_LIMIT ##
 
+```shell
     awk -F':' -v "limit=${l##UID_MIN}" '{ if ( $3 >= limit ) print $1}' /etc/passwd
+```
 
 ### output example
 
@@ -92,6 +111,7 @@ done
 
 ( untested )
 
+```shell
 #!/bin/bash
 # Name: listusers.bash
 # Purpose: List all normal user and system accounts in the system. Tested on RHEL / Debian Linux
@@ -99,33 +119,35 @@ done
 # -----------------------------------------------------------------------------------
 _l="/etc/login.defs"
 _p="/etc/passwd"
- 
+
 ## get mini UID limit ##
 l=$(grep "^UID_MIN" $_l)
- 
+
 ## get max UID limit ##
 l1=$(grep "^UID_MAX" $_l)
- 
+
 ## use awk to print if UID >= $MIN and UID <= $MAX and shell is not /sbin/nologin   ##
 echo "----------[ Normal User Accounts ]---------------"
 awk -F':' -v "min=${l##UID_MIN}" -v "max=${l1##UID_MAX}" '{ if ( $3 >= min && $3 <= max  && $7 != "/sbin/nologin" ) print $0 }' "$_p"
- 
- 
+
+
 echo ""
 echo "----------[ System User Accounts ]---------------"
 awk -F':' -v "min=${l##UID_MIN}" -v "max=${l1##UID_MAX}" '{ if ( !($3 >= min && $3 <= max  && $7 != "/sbin/nologin")) print $0 }' "$_p"
+```
 
 ### Become target user(s)
 
 ### How to get a users home directory in all version sof Ansible
 
+```shell
 # * works for ldap as well
 
 # https://github.com/ansible/ansible/issues/11902
 # http://stackoverflow.com/questions/33343215/how-to-get-remote-users-home-directory-in-ansible
 
 - hosts: all
-  tasks:
+    tasks:
     - name:
       shell: >
         getent passwd {{ user }} | cut -d: -f6
@@ -134,11 +156,13 @@ awk -F':' -v "min=${l##UID_MIN}" -v "max=${l1##UID_MAX}" '{ if ( !($3 >= min && 
 
     - name: debug output
       debug: var=user_home.stdout
+```
 
 ### Ensure for users_bash_scripts_dir
 
     ~/bin/scripts
 
+```yaml
 - name: ensure for remote directories
   file:
     state   : '{{ item.value.state   | default("directory") }}'
@@ -148,11 +172,12 @@ awk -F':' -v "min=${l##UID_MIN}" -v "max=${l1##UID_MAX}" '{ if ( !($3 >= min && 
     mode    : '{{ item.value.mode    | default(omit) }}'
     recurse : '{{ item.value.recurse | default(omit) }}'
   with_dict: acemenu_users_root_dirs
-
+```
 ### Ensure for path to acemenu.sh
 
 #### ensure for our path block in the users ~/.bashrc
 
+```shell
 # see following
 #
 # http://stackoverflow.com/questions/33343215/how-to-get-remote-users-home-directory-in-ansible
@@ -188,8 +213,10 @@ awk -F':' -v "min=${l##UID_MIN}" -v "max=${l1##UID_MAX}" '{ if ( !($3 >= min && 
 #  grep UID_MIN /etc/login.defs
 # awk -F':' -v "min=1000" -v "max=60000" '{ if ( $3 >= min && $3 <= max ) print $0}' /etc/passwd | cut -d: -f1
 
+​```yaml
 - name: "get remote systems users by UID range"
   shell: >
     awk -F':' -v "min=500" -v "max=60000" '{ if ( $3 >= min && $3 <= max ) print $0}' /etc/passwd | cut -d: -f1
   changed_when: false
   register: users_by_range
+```
