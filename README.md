@@ -28,12 +28,15 @@ Role Variables
 
 Currently makes use of the following three variables in defaults/main.yml. `acemenu_uid_min` and `acemenu_uid_max` are used to define the UID range of the users on remote systems that will have access to `acemenu`.
 
-    ---
-    # defaults file for ansible-role-acemenu
-    
-    acemenu_uid_min: 1000
-    acemenu_uid_max: 60000 
-    acemenu_bin_dir: 'bin/acemenu'
+```shell
+---
+# defaults file for ansible-role-acemenu
+
+acemenu_uid_min: 1001
+acemenu_uid_max: 1001
+acemenu_bin_dir: 'bin/acemenu'
+acemenu_help_dir: 'bin/acemenu/helpfiles'
+```
 
 ### group_vars
 
