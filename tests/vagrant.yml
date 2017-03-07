@@ -1,7 +1,10 @@
+# file: roles/aceadmin/tests/vagrant.yml
 ---
-# file: roles/acemenu/tests/test.yml
-- hosts: localhost
-  remote_user: root
+- hosts: all
+  remote_user: vagrant
+  sudo: true
+  roles:
+    - ../../
 
   vars:
 #    - acemenu_uid_min: 1001
@@ -12,10 +15,7 @@
 
         user_vagrant:
 
-          home : '/root'
-          owner: 'root'
-          group: 'root'
+          home : '/home/vagrant'
+          owner: 'vagrant'
+          group: 'vagrant'
           mode : '0755'
-
-  roles:
-    - aceadmin

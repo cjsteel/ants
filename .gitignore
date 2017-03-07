@@ -1,5 +1,7 @@
 # temp files
 *~
+.vagrant
+vagrant.retry
 
 # private files
 .private

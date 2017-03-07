@@ -18,7 +18,7 @@
   become : true
   file   :
     state   : 'directory'
-    path    : '{{ item.value.home }}/{{ acemenu_bin_dir }}'
+    path    : '{{ item.value.home }}/{{ acemenu_help_dir }}'
     owner   : '{{ item.value.owner }}'
     group   : '{{ item.value.group }}'
     mode    : '{{ item.value.mode }}'
