@@ -1,21 +1,40 @@
-# file: roles/aceadmin/tests/vagrant.yml
 ---
+# file: roles/acemenu/tests/vagrant.yml
+
 - hosts: all
-  remote_user: vagrant
-  sudo: true
+  remote_user: ubuntu
+  become: true
+  pre_tasks:
+
+    - set_fact: fact_controller_user="{{ lookup('env','USER') }}"
+    - debug: var=fact_controller_user
+
+    - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
+    - debug: var=fact_controller_home
+
+  vars:
+
+    - acemenu_remote_user : 'ubuntu'
+
+    - acemenu_state         : 'present'
+
+    - acemenu_uid_min: 1000
+    - acemenu_uid_max: 1000
+
+    - acemenu_bin_dir: 'bin/acemenu'
+    - acemenu_help_dir: '{{ acemenu_bin_dir }}/helpfiles'
+
+    - acemenu_user_homes:
+
+       user_ubuntu:
+
+          home : '/home/{{ acemenu_remote_user }}'
+          owner: '{{ acemenu_remote_user }}'
+          group: '{{ acemenu_remote_user }}'
+          mode : '0755'
+
   roles:
     - ../../
 
-  vars:
-#    - acemenu_uid_min: 1001
-#    - acemenu_uid_max: 1001
-    - acemenu_bin_dir: 'bin/acemenu'
-    - acemenu_help_dir: '{{ acemenu_bin_dir }}/helpfiles'
-    - acemenu_user_homes:
+  
 
-        user_vagrant:
-
-          home : '/home/vagrant'
-          owner: 'vagrant'
-          group: 'vagrant'
-          mode : '0755'
