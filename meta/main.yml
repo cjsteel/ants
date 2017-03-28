@@ -17,11 +17,11 @@ dependencies:
         mode  : '0755'
         state: 'directory' # options are 'directory' or 'absent'
 
-#      - name: 'template menu.j2'
-#        src: '/etc/skel/bin/acemenu/menu'
-#        path : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.j2'
-#        mode: '0755'
-#        state: 'template' # options are 'template' or 'absent'
+      - name: 'template menu.j2'
+        src: '/etc/skel/bin/acemenu/menu'
+        path : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.j2'
+        mode: '0755'
+        state: 'template' # options are 'template' or 'absent'
 
 #      - name: 'template menuitems.j2'
 #        src : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menuitems.j2'
