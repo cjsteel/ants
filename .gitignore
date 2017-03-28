@@ -2,7 +2,7 @@
 *~
 .vagrant
 vagrant.retry
-
+*.log
 # private files
 .private
 .prv

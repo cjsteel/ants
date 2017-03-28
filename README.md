@@ -134,6 +134,14 @@ cp roles/acemenu/files/acemenu.yml acemenu.yml
 - hosts: acemenu
   become: true
   gather_facts: true
+  pre_tasks:
+
+    - set_fact: fact_controller_user="{{ lookup('env','USER') }}"
+    - debug: var=fact_controller_user
+
+    - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
+    - debug: var=fact_controller_home
+
   roles:
     - acemenu
 ```
@@ -168,7 +176,7 @@ To copy this example from the role:
 Ansible Command
 ---------------
 
-    ansible-playbook systems.yml -i inventory/development
+    ansible-playbook systems.yml -i inventory/dev --limit workstation-001
 
 ### Problem
 
