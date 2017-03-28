@@ -1,8 +1,11 @@
 ---
-# defaults file for ansible-role-acemenu
+# file: roles/acemenu/defaults/main.yml
 
-acemenu_uid_min: 1001
-acemenu_uid_max: 1001
+acemenu_state       : 'present'
+
+acemenu_remote_user : '{{ fact_controller_user }}'
+acemenu_uid_min     : 1001
+acemenu_uid_max     : 1001
 
 acemenu_personal_bin: 'bin'
 acemenu_bin_dir: '{{ acemenu_personal_bin }}/acemenu'
@@ -10,17 +13,17 @@ acemenu_help_dir: '{{ acemenu_bin_dir }}/helpfiles'
 
 acemenu_user_homes:
 
-  user_csteel:
+  acemenu_ansible_user:
 
-    home : '/home/users/csteel'
-    owner: 'csteel'
-    group: '71048'
-    mode : '0755'
+    home : '/home/{{ acemenu_remote_user }}'
+    owner: '{{ acemenu_remote_user }}'
+    group: '2001' # '100x'
+    mode : '2001' # '100x'
 
-#  user_aceadmin:
+#  acemenu_admin_user:
 #
-#    home : '/home/aceadmin'
-#    owner: 'aceadmin'
-#    group: aceadmin'
+#    home : '/home/admin'
+#    owner: 'admin' # '100x'
+#    group: 'admin' # '100x'
 #    mode : '0755'
 

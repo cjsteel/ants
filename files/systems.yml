@@ -1,8 +1,15 @@
 ---
-# file: systems.yml
-
+# file: project/systems.yml
 - hosts: all
   become: false
   gather_facts: false
+
+- include: deployment_user.yml
+
+- include: shorewall.yml
+
+- include: ldap.yml
+
+- include: workstation.yml
 
 - include: acemenu.yml
