@@ -5,6 +5,7 @@ dependencies:
 #    ensure_dirs_on_remote: '{{ display_ensure_dirs_on_remote }}'
 #    ensure_dirs_on_local : '{{ display_ensure_dirs_on_local }}'
 
+
   - role: skel
     become: true
     tags: ['minc', 'skel']
@@ -14,12 +15,19 @@ dependencies:
         path  : '/etc/skel/{{ acemenu_help_dir }}'
         user  : 'root'
         group : 'root'
-        mode  : '0755'
+        mode: '0755'
         state: 'directory' # options are 'directory' or 'absent'
 
-#      - name : 'template menu.j2'
+      - name: 'template menuitems.j2'
+        src : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menuitems.j2'
+        path: '/etc/skel/{{ acemenu_bin_dir }}/menuitems.txt'
+        mode: '0755'
+        state: 'template' # options are 'template' or 'absent'
+
+
+#      - name : 'template /etc/skel/bin/acemenu/menu.sh'
 #        src  : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.j2'
-#        path : '/etc/skel/bin/acemenu/menu'
+#        path : '/etc/skel/bin/acemenu/menu.sh'
 #        mode : '0755'
 #        state: 'template' # options are 'template' or 'absent'
 
