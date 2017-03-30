@@ -15,7 +15,7 @@ acemenu_user_homes:
 
   acemenu_ansible_user:
 
-    home : '/home/{{ acemenu_remote_user }}'
+    home : '{{ fact_controller_home }}'
     owner: '{{ acemenu_remote_user }}'
     group: '2001' # '100x'
     mode : '2001' # '100x'
