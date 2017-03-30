@@ -19,14 +19,14 @@ dependencies:
         state: 'directory' # options are 'directory' or 'absent'
 
       - name: 'template menuitems.j2'
-        src : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menuitems.j2'
+        src : 'roles/acemenu/templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menuitems.j2'
         path: '/etc/skel/{{ acemenu_bin_dir }}/menuitems.txt'
         mode: '0755'
         state: 'template' # options are 'template' or 'absent'
 
 
 #      - name : 'template /etc/skel/bin/acemenu/menu.sh'
-#        src  : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.j2'
+#        src  : 'roles/acemenu/templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.j2'
 #        path : '/etc/skel/bin/acemenu/menu.sh'
 #        mode : '0755'
 #        state: 'template' # options are 'template' or 'absent'
