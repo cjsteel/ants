@@ -2,7 +2,7 @@
 # file: roles/acemenu/defaults/main.yml
 
 acemenu_state       : 'present'
-
+acemenu_install_type : 'skel' # 'user'
 acemenu_remote_user : '{{ fact_controller_user }}'
 acemenu_uid_min     : 1001
 acemenu_uid_max     : 1001

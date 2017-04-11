@@ -34,6 +34,7 @@
     group    : '{{ item.value.group }}'
     mode     : '{{ item.value.mode }}'
   with_dict: '{{ acemenu_user_homes }}'
+  when: '{{ acemenu_install_type }}' == 'user'
 #  when: '{{ ansible_distribution }} == "Ubuntu"'
 
 - name: 'when ansible_distribution == "Ubuntu", template our menu items'
