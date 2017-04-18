@@ -29,17 +29,21 @@ Requirements
 Role Variables
 --------------
 
-Currently makes use of the following three variables in defaults/main.yml. `acemenu_uid_min` and `acemenu_uid_max` are used to define the UID range of the users on remote systems that will have access to `acemenu`.
+Currently makes use of the following variables in defaults/main.yml.
+
+At some point in time `acemenu_uid_min` and `acemenu_uid_max` are used to define the UID range of the users on remote systems that will have access to `acemenu`.
 
 ```yaml
 ---
 # file: roles/acemenu/defaults/main.yml
 
-acemenu_state       : 'present'
+acemenu_state             : 'present'
+acemenu_install_type      : 'skel'
+acemenu_install_type_user : False
 
-acemenu_remote_user : '{{ fact_controller_user }}'
-acemenu_uid_min     : 1001
-acemenu_uid_max     : 1001
+acemenu_deployment_user : '{{ project_deployment_user }}'
+#acemenu_uid_min     : 1001
+#acemenu_uid_max     : 1001
 
 acemenu_personal_bin: 'bin'
 acemenu_bin_dir: '{{ acemenu_personal_bin }}/acemenu'
@@ -47,19 +51,19 @@ acemenu_help_dir: '{{ acemenu_bin_dir }}/helpfiles'
 
 acemenu_user_homes:
 
-  acemenu_ansible_user:
+#  acemenu_ansible_user:
 
-    home : '/home/{{ acemenu_remote_user }}'
-    owner: '{{ acemenu_remote_user }}'
-    group: '2001' # '100x'
-    mode : '2001' # '100x'
+#    home : '{{ fact_controller_home }}'
+#    owner: '{{ acemenu_deployment_user }}'
+#    group: '2001' # '100x'
+#     mode : '0775'
 
-#  acemenu_admin_user:
-#
-#    home : '/home/admin'
-#    owner: 'admin' # '100x'
-#    group: 'admin' # '100x'
-#    mode : '0755'
+#  auser_home:
+
+#    home : '/home/users/auser'
+#    owner: 'auser'
+#    group: 'auser'
+#    mode : '0775'
 ```
 
 ### group_vars

@@ -1,11 +1,18 @@
 ---
 # tasks file for ansible-role-acemenu
 
+- debug: var=fact_controller_user
+- debug: var=fact_controller_home
+- debug: var=fact_role_name
+- debug: var=fact_role_name2
+- debug: var=fact_role_dir
+
 - name: "  debug: var=user_homes"
   debug: var=acemenu_user_homes
+  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
 - name: "ensure for remote users bin/acemenu directory"
-  become: true
+  become: '{{ acemenu_deployment_user }}'
   file:
     state : 'directory'
     path  : '{{ item.value.home }}/{{ acemenu_bin_dir }}'
@@ -13,9 +20,12 @@
     group : '{{ item.value.group }}'
     mode  : '{{ item.value.mode }}'
   with_dict: "{{ acemenu_user_homes }}"
+  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
+
+# ensure helpfiles dir
 
 - name: "ensure for remote users bin/acemenu/helpfiles directory"
-  become : true
+  become: '{{ acemenu_deployment_user }}'
   file   :
     state   : 'directory'
     path    : '{{ item.value.home }}/{{ acemenu_help_dir }}'
@@ -23,9 +33,12 @@
     group   : '{{ item.value.group }}'
     mode    : '{{ item.value.mode }}'
   with_dict: '{{ acemenu_user_homes }}'
+  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
+
+# ensure for menu.sh script
 
 - name: "when ansible_distribution == Ubuntu, template our menu script"
-  become: true
+  become: '{{ acemenu_deployment_user }}'
   template :
     backup   : yes
     src      : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.sh.j2'
@@ -37,7 +50,7 @@
   when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
 - name: 'when ansible_distribution == "Ubuntu", template our menu items'
-  become: true
+  become: '{{ acemenu_deployment_user }}'
   template:
     backup  : yes
     src     : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menuitems.j2'
@@ -46,10 +59,10 @@
     group   : '{{ item.value.group }}'
     mode    : '{{ item.value.mode }}'
   with_dict : '{{ acemenu_user_homes }}'
-  when: ansible_distribution == "Ubuntu"
+  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
 - name: 'when ansible_distribution == "CentOS", template our menu items'
-  become: true
+  become: '{{ acemenu_deployment_user }}'
   template:
     backup  : yes
     src     : '{{ ansible_distribution }}/{{ ansible_distribution_major_version }}/acemenu/menuitems.j2'
@@ -58,12 +71,12 @@
     group   : '{{ item.value.group }}'
     mode    : '{{ item.value.mode }}'
   with_dict: "{{ acemenu_user_homes }}"
-  when: ansible_distribution == "CentOS" 
+  when: ansible_distribution == "CentOS" and acemenu_install_type_user == True
 
 # helpfiles
 
 - name: 'copy over our CentOS help files'
-  become: true
+  become: '{{ acemenu_deployment_user }}'
   copy:
     backup  : no
     force   : yes # overwrites any existing file(s).
@@ -73,10 +86,10 @@
     group   : '{{ item.value.group }}'
     mode    : '{{ item.value.mode }}'
   with_dict : "{{ acemenu_user_homes }}"
-  when: ansible_distribution == "CentOS"
+  when: ansible_distribution == "CentOS" and acemenu_install_type_user == True
 
 - name: 'copy over our Ubuntu help files'
-  become: true
+  become: '{{ acemenu_deployment_user }}'
   copy:
     directory_mode : yes
     backup  : no
@@ -87,11 +100,13 @@
     group   : '{{ item.value.group }}'
     mode    : '{{ item.value.mode }}'
   with_dict : "{{ acemenu_user_homes }}"
-  when: ansible_distribution == "Ubuntu"
+  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
+
 
 # Create menu symlink
 
 - name: "Create symlink ~/bin/menu that points to ~/bin/acemenu/menu.sh"
+  become: '{{ acemenu_deployment_user }}'
   file:
     state : 'link'
     src   : '{{ item.value.home }}/{{ acemenu_bin_dir }}/menu.sh'
@@ -100,7 +115,7 @@
     group : '{{ item.value.group }}'
     mode  : '{{ item.value.mode }}'
   with_dict : "{{ acemenu_user_homes }}"
-  when: ansible_distribution == "Ubuntu"
+  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
 # Configuration files
 
@@ -154,7 +169,7 @@
 #  when: ansible_distribution == "CentOS" 
 
 - name: "ensure for ~/.bash_aliases"
-  become: true
+  become: '{{ acemenu_deployment_user }}'
   file:
     state   : 'touch'
     path    : '{{ item.value.home }}/.bash_aliases'
@@ -162,9 +177,10 @@
     group   : '{{ item.value.group }}'
     mode    : '{{ item.value.mode }}'
   with_dict: "{{ acemenu_user_homes }}"
+  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
 - name: "ensure for menu message block in ~/.bash_aliases"
-  become: true
+  become: '{{ acemenu_deployment_user }}'
   blockinfile:
     dest    : '{{ item.value.home }}/.bash_aliases'
     owner   : '{{ item.value.owner }}'
@@ -177,6 +193,6 @@
     block: |
       alias aceactivate='source activate ansible-1.9.0.1'
   with_dict: "{{ acemenu_user_homes }}"
-
+  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
 

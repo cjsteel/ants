@@ -1,12 +1,21 @@
 ---
 # file: roles/acemenu/defaults/main.yml
 
-acemenu_state       : 'present'
-acemenu_install_type      : 'skel'
-acemenu_install_type_user : True
-acemenu_remote_user : '{{ fact_controller_user }}'
-acemenu_uid_min     : 1001
-acemenu_uid_max     : 1001
+fact_controller_user : "{{ lookup('env','USER') }}"
+fact_controller_home : "{{ lookup('env','HOME') }}"
+fact_role_name=      : "{{ lookup('env','ANSIBLE_ROLE_NAME') }}"
+fact_role_name2      : "{{ lookup('pipe','pwd')|dirname|basename }}"
+fact_role_dir        : "{{ lookup('pipe','pwd')|dirname }}"
+
+
+acemenu_state             : 'present'
+acemenu_install_type_skel : True
+acemenu_install_type_user : False # when True comment out auser_home in the set acemenu_user_homes
+#                                   and uncomment and renname values for realuser_home
+
+acemenu_deployment_user : '{{ project_deployment_user }}'
+#acemenu_uid_min     : 1001
+#acemenu_uid_max     : 1001
 
 acemenu_personal_bin: 'bin'
 acemenu_bin_dir: '{{ acemenu_personal_bin }}/acemenu'
@@ -14,17 +23,28 @@ acemenu_help_dir: '{{ acemenu_bin_dir }}/helpfiles'
 
 acemenu_user_homes:
 
-  acemenu_ansible_user:
+  auser_home:
 
-    home : '{{ fact_controller_home }}'
-    owner: '{{ acemenu_remote_user }}'
-    group: '2001' # '100x'
-    mode : '2001' # '100x'
+    home : '/home/users/auser'
+    owner: 'auser'
+    group: 'auser'
+    mode : '0775'
 
-#  acemenu_admin_user:
-#
-#    home : '/home/admin'
-#    owner: 'admin' # '100x'
-#    group: 'admin' # '100x'
-#    mode : '0755'
+#  realuser_home:
+
+#    home : '/home/users/realuser'
+#    owner: 'realuser'
+#    group: 'realuser'
+#    mode : '0775'
+
+
+#  acemenu_ansible_user:
+
+#    home : '{{ fact_controller_home }}'
+#    owner: '{{ acemenu_deployment_user }}'
+#    group: '2001' # '100x'
+#     mode : '0775'
+
+
+
 
