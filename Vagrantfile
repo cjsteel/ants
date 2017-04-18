@@ -4,34 +4,13 @@
 role = File.basename(File.expand_path(File.dirname(__FILE__)))
 
 boxes = [
-#  {
-#    :name => "ubuntu-1204",
-#    :box => "bento/ubuntu-12.04",
-#    :ip => '10.0.0.11',
-#    :cpu => "50",
-#    :ram => "256"
-#  },
-#  {
-#    :name => "ubuntu-1404",
-#    :box => "bento/ubuntu-14.04",
-#    :ip => '10.0.0.12',
-#    :cpu => "50",
-#    :ram => "256"
-#  },
   {
     :name => "ubuntu-1604",
     :box => "ubuntu/xenial64",
-    :ip => '10.0.0.13',
+    :ip => '10.0.0.12',
     :cpu => "50",
     :ram => "256"
   },
-#  {
-#    :name => "debian-711",
-#    :box => "bento/debian-7.11",
-#    :ip => '10.0.0.14',
-#    :cpu => "50",
-#    :ram => "256"
-#  },
 #  {
 #    :name => "debian-86",
 #    :box => "bento/debian-8.6",
@@ -44,9 +23,10 @@ boxes = [
 Vagrant.configure("2") do |config|
   boxes.each do |box|
     config.vm.define box[:name] do |vms|
+#      vms.ssh.password = 'vagrant'
       vms.vm.box = box[:box]
       vms.vm.hostname = "ansible-#{role}-#{box[:name]}"
-      vms.vm.synced_folder ".vagrant/synced", "/home/vagrant"
+#      vms.vm.synced_folder ".vagrant/synced", "/home/vagrant"
       vms.vm.provider "virtualbox" do |v|
         v.customize ["modifyvm", :id, "--cpuexecutioncap", box[:cpu]]
         v.customize ["modifyvm", :id, "--memory", box[:ram]]

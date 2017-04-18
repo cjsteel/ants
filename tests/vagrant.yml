@@ -7,16 +7,23 @@
   pre_tasks:
 
     - set_fact: fact_controller_user="{{ lookup('env','USER') }}"
-    - debug: var=fact_controller_user
-
     - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
+    - set_fact: fact_role_name="{{ lookup('env','ANSIBLE_ROLE_NAME') }}"
+    - set_fact: fact_role_name2="{{ lookup('pipe','pwd')|dirname|basename }}"
+    - set_fact: fact_role_dir="{{ lookup('pipe','pwd')|dirname }}"
+
+    - debug: var=fact_controller_user
     - debug: var=fact_controller_home
+    - debug: var=fact_role_name
+    - debug: var=fact_role_name2
+    - debug: var=fact_role_dir
 
   vars:
 
     - acemenu_state       : 'present'
+    - acemenu_install_type : 'skel' # 'user'
 
-    - acemenu_remote_user : 'ubuntu'
+    - acemenu_remote_user : 'ubuntu' # "{{ ansible_env.USER }}"
     - acemenu_uid_min     : 1000
     - acemenu_uid_max     : 1000
 
@@ -33,8 +40,14 @@
           group: '{{ acemenu_remote_user }}'
           mode : '0755'
 
+#       user_ubuntu:
+
+#          home : '/home/{{ acemenu_remote_user }}'
+#          owner: '{{ acemenu_remote_user }}'
+#          group: '{{ acemenu_remote_user }}'
+#          mode : '0755'
+
   roles:
     - ../../
-
   
 

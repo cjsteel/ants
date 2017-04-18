@@ -24,18 +24,17 @@
     mode    : '{{ item.value.mode }}'
   with_dict: '{{ acemenu_user_homes }}'
 
-- name: 'when ansible_distribution == "Ubuntu", template our menu script'
+- name: "when ansible_distribution == Ubuntu, template our menu script"
   become: true
   template :
     backup   : yes
-    src      : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.j2'
-    dest     : '{{ item.value.home }}/{{ acemenu_bin_dir }}/menu'
+    src      : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.sh.j2'
+    dest     : '{{ item.value.home }}/{{ acemenu_bin_dir }}/menu.sh'
     owner    : '{{ item.value.owner }}'
     group    : '{{ item.value.group }}'
     mode     : '{{ item.value.mode }}'
   with_dict: '{{ acemenu_user_homes }}'
-  when: '{{ acemenu_install_type }}' == 'user'
-#  when: '{{ ansible_distribution }} == "Ubuntu"'
+  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
 - name: 'when ansible_distribution == "Ubuntu", template our menu items'
   become: true
@@ -47,7 +46,7 @@
     group   : '{{ item.value.group }}'
     mode    : '{{ item.value.mode }}'
   with_dict : '{{ acemenu_user_homes }}'
-  when: ansible_distribution == "Ubuntu" 
+  when: ansible_distribution == "Ubuntu"
 
 - name: 'when ansible_distribution == "CentOS", template our menu items'
   become: true
@@ -63,7 +62,7 @@
 
 # helpfiles
 
-- name: 'copy over our help files'
+- name: 'copy over our CentOS help files'
   become: true
   copy:
     backup  : no
@@ -76,7 +75,7 @@
   with_dict : "{{ acemenu_user_homes }}"
   when: ansible_distribution == "CentOS"
 
-- name: 'copy over our help files'
+- name: 'copy over our Ubuntu help files'
   become: true
   copy:
     directory_mode : yes
@@ -92,10 +91,10 @@
 
 # Create menu symlink
 
-- name: "Create symlink ~/bin/menu that points to ~/bin/acemenu/menu"
+- name: "Create symlink ~/bin/menu that points to ~/bin/acemenu/menu.sh"
   file:
     state : 'link'
-    src   : '{{ item.value.home }}/{{ acemenu_bin_dir }}/menu'
+    src   : '{{ item.value.home }}/{{ acemenu_bin_dir }}/menu.sh'
     dest  : '{{ item.value.home }}/{{ acemenu_personal_bin }}/menu'
     owner : '{{ item.value.owner }}'
     group : '{{ item.value.group }}'

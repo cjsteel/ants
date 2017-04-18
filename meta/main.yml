@@ -9,9 +9,25 @@ dependencies:
   - role: skel
     become: true
     tags: ['minc', 'skel']
+    pre_tasks:
+
+      - set_fact: fact_controller_user="{{ lookup('env','USER') }}"
+      - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
+      - set_fact: fact_role_name="{{ lookup('env','ANSIBLE_ROLE_NAME') }}"
+      - set_fact: fact_role_name2="{{ lookup('pipe','pwd')|dirname|basename }}"
+      - set_fact: fact_role_dir="{{ lookup('pipe','pwd')|dirname }}"
+
+      - debug: var=fact_controller_user
+      - debug: var=fact_controller_home
+      - debug: var=fact_role_name
+      - debug: var=fact_role_name2
+      - debug: var=fact_role_dir
+    
     skel_entries:
 
-      - name: "meta/main.yml entry for /etc/skel/bin"
+# does the following get created if /etc/skel/bin does not exist?
+
+      - name: "Ensure for acemenu help directory in /etc/skel/bin"
         path  : '/etc/skel/{{ acemenu_help_dir }}'
         user  : 'root'
         group : 'root'
@@ -19,17 +35,16 @@ dependencies:
         state: 'directory' # options are 'directory' or 'absent'
 
       - name: 'template menuitems.j2'
-        src : 'roles/acemenu/templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menuitems.j2'
+        src : '{{ fact_role_dir }}/templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menuitems.j2'
         path: '/etc/skel/{{ acemenu_bin_dir }}/menuitems.txt'
         mode: '0755'
         state: 'template' # options are 'template' or 'absent'
 
-
-#      - name : 'template /etc/skel/bin/acemenu/menu.sh'
-#        src  : 'roles/acemenu/templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.j2'
-#        path : '/etc/skel/bin/acemenu/menu.sh'
-#        mode : '0755'
-#        state: 'template' # options are 'template' or 'absent'
+      - name : 'template /etc/skel/bin/acemenu/menu.sh'
+        src  : '{{ fact_role_dir }}/templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.sh.j2'
+        path : '/etc/skel/{{ acemenu_bin_dir }}/menu.sh'
+        mode : '0755'
+        state: 'template' # options are 'template' or 'absent'
 
 #      - name: 'template menuitems.j2'
 #        src : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menuitems.j2'

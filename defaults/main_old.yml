@@ -1,8 +1,0 @@
----
-# defaults file for ansible-role-acemenu
-
-acemenu_uid_min: 1001
-acemenu_uid_max: 1001
-acemenu_bin_dir: 'bin/acemenu'
-acemenu_help_dir: 'bin/acemenu/helpfiles'
-

@@ -16,10 +16,16 @@
 #    A text file called menuitems.txt should be place in the same directory as this file.
 #    Place a single menu description on each line.
 #
-#    PATH entry
+#    For example:
 #
-#    Path setting in ~/.bashrc or ~/.profile depending on the os. For Ubuntu that would be
-#    ~/.bashrc. 
+#      about
+#      contributing
+#      some_other_item
+#
+#    PATH
+#
+#    The PATH env should include ~/bin. For Ubuntu that would be in ~/.bashrc, for
+#    others perhaps ~/.profile
 #
 # Usage:
 #
@@ -33,13 +39,13 @@ MENUITEMS=""
 while IFS=$'
 ' read -r line || [[ -n "$line" ]]; do
    MENUITEMS="$MENUITEMS $line"
-done < "{{ item.stdout }}/{{ acemenu_bin_dir }}/menuitems.txt"
+done < "$HOME/{{ acemenu_bin_dir }}/menuitems.txt"
 echo
 
 select menuitem in $MENUITEMS
 do
   clear
-  cat "{{ item.stdout }}/{{ acemenu_bin_dir }}/helpfiles/${menuitem}.txt"
+  cat "$HOME/{{ acemenu_bin_dir }}/helpfiles/${menuitem}.txt"
   break  # What happens if there is no 'break' here?
 done
 exit
