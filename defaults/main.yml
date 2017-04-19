@@ -10,7 +10,7 @@ fact_role_dir        : "{{ lookup('pipe','pwd')|dirname }}"
 
 acemenu_state             : 'present'
 acemenu_install_type_skel : True
-acemenu_install_type_user : False # when True comment out auser_home in the set acemenu_user_homes
+acemenu_install_type_user : False # when True comment out csteel_home in the set acemenu_user_homes
 #                                   and uncomment and renname values for realuser_home
 
 acemenu_deployment_user : '{{ project_deployment_user }}'
@@ -23,11 +23,11 @@ acemenu_help_dir: '{{ acemenu_bin_dir }}/helpfiles'
 
 acemenu_user_homes:
 
-  auser_home:
+  csteel_home:
 
-    home : '/home/users/auser'
-    owner: 'auser'
-    group: 'auser'
+    home : '/home/users/csteel'
+    owner: 'csteel'
+    group: 'csteel'
     mode : '0775'
 
 #  realuser_home:
