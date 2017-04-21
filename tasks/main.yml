@@ -1,11 +1,7 @@
 ---
 # tasks file for ansible-role-acemenu
 
-- debug: var=fact_controller_user
-- debug: var=fact_controller_home
-- debug: var=fact_role_name
-- debug: var=fact_role_name2
-- debug: var=fact_role_dir
+- debug: var=fact_role_path
 
 - name: "  debug: var=user_homes"
   debug: var=acemenu_user_homes
