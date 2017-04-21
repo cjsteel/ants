@@ -1,17 +1,10 @@
 ---
 # file: roles/acemenu/defaults/main.yml
 
-#fact_controller_user : "{{ lookup('env','USER') }}"
-#fact_controller_home : "{{ lookup('env','HOME') }}"
-#fact_role_name=      : "{{ lookup('env','ANSIBLE_ROLE_NAME') }}"
-#fact_role_name2      : "{{ lookup('pipe','pwd')|dirname|basename }}"
-#fact_role_dir        : "{{ lookup('pipe','pwd')|dirname }}"
-
-
 acemenu_state             : 'present'
 acemenu_install_type_skel : True
-acemenu_install_type_user : False # when True comment out csteel_home in the set acemenu_user_homes
-#                                   and uncomment and renname values for realuser_home
+acemenu_install_type_user : False # when True relpace realuser_home vars with a real users
+#                                   infromation
 
 acemenu_deployment_user : '{{ project_deployment_user }}'
 #acemenu_uid_min     : 1001
@@ -23,28 +16,9 @@ acemenu_help_dir: '{{ acemenu_bin_dir }}/helpfiles'
 
 acemenu_user_homes:
 
-  csteel_home:
+  realuser_home:
 
-    home : '/home/users/csteel'
-    owner: 'csteel'
-    group: 'csteel'
+    home : '/home/users/realuser'
+    owner: 'realuser'
+    group: 'realuser'
     mode : '0775'
-
-#  realuser_home:
-
-#    home : '/home/users/realuser'
-#    owner: 'realuser'
-#    group: 'realuser'
-#    mode : '0775'
-
-
-#  acemenu_ansible_user:
-
-#    home : '{{ fact_controller_home }}'
-#    owner: '{{ acemenu_deployment_user }}'
-#    group: '2001' # '100x'
-#     mode : '0775'
-
-
-
-
