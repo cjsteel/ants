@@ -81,6 +81,52 @@ Edit as desired:
 nano group_vars/acemenu/acemenu_defaults.yml
 ```
 
+### as dependency
+
+NEEDS MAJOR EDITING:
+
+```shell
+---
+# file: roles/display/meta/main.yml
+
+dependencies:
+
+  - role: ensure_dirs
+    tags: ['minc', 'ensure_dirs']
+    ensure_dirs_on_remote: '{{ display_ensure_dirs_on_remote }}'
+    ensure_dirs_on_local : '{{ display_ensure_dirs_on_local }}'
+
+  - role: acemenu
+    become: true
+    tags: ['acemenu']
+    skel_entries:
+
+      - name: "meta/main.yml entry for /etc/skel/bin"
+        path  : '/etc/skel/bin'
+        user  : 'root'
+        group : 'root'
+        mode: '0755'
+        state: 'directory' # options are 'directory' or 'absent'
+
+      - name: 'template /etc/skel/bin/minc-toolkit-config.sh'
+        src:  'minc-toolkit-config.sh'
+        path: '/etc/skel/bin/minc-toolkit-config.sh'
+        mode: '0755'
+        state: 'template' # options are 'template' or 'absent'
+
+      - name:  'template /etc/skel/bin/minc-toolkit-conf-{{ minc_ver}}.sh'
+        src:   'versioned-minc-toolkit-config.sh'
+        path:  '/etc/skel/bin/minc-toolkit-config-{{ minc_ver }}.sh'
+        mode:  '0755'
+        state: 'template' # options are 'template' or 'absent'
+```
+
+
+
+
+
+
+
 ### host_vars
 
 ```shell

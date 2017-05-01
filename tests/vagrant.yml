@@ -22,16 +22,34 @@
 
   vars:
 
-    - acemenu_state       : 'present'
-    - acemenu_install_type : 'skel' # 'user'
+    - acemenu_debug             : true        # not used at this time
 
-    - acemenu_remote_user : 'ubuntu' # "{{ ansible_env.USER }}"
-    - acemenu_uid_min     : 1000
-    - acemenu_uid_max     : 1000
+    - acemenu_version            : '0.0.1'
+    - acemenu_version_pinning    : false       # not in use at this time
 
-    - acemenu_personal_bin: 'bin'
-    - acemenu_bin_dir: '{{ acemenu_personal_bin }}/acemenu'
-    - acemenu_help_dir: '{{ acemenu_bin_dir }}/helpfiles'
+    - acemenu_role_name         : 'acemenu'       # not in use at this time
+    - acemenu_state             : 'present'
+    - acemenu_install_type      : 'skel'
+#    - acemenu_install_type_user : True  # If you wnat to install on per user basis as well
+
+    # user installs
+
+    - acemenu_deployment_user : 'ubuntu'
+    - acemenu_uid_min         : 1000
+    - acemenu_uid_max         : 1000
+
+    # directories
+
+    - acemenu_personal_bin    : 'bin'
+    - acemenu_bin_dir         : '{{ acemenu_personal_bin }}/acemenu'
+    - acemenu_help_dir        : '{{ acemenu_bin_dir }}/helpfiles'
+
+    #- fsl_profile_blank_path : 'roles/{{ fsl_role_name }}/files/profile'
+# files
+
+    - acemenu_menu_template_src    : '../templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.sh.j2'
+    - acemenu_menuitems_blank_path   : '../files/acemenu/menuitems.txt'
+    - acemenu_about_description_path : '../files/acemenu/helpfiles/about.txt'
 
     - acemenu_user_homes:
 
@@ -41,13 +59,6 @@
           owner: '{{ acemenu_remote_user }}'
           group: '{{ acemenu_remote_user }}'
           mode : '0755'
-
-#       user_ubuntu:
-
-#          home : '/home/{{ acemenu_remote_user }}'
-#          owner: '{{ acemenu_remote_user }}'
-#          group: '{{ acemenu_remote_user }}'
-#          mode : '0755'
 
   roles:
     - ../../
