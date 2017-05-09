@@ -8,7 +8,7 @@
   when: ansible_distribution == "Ubuntu" and acemenu_install_type_user is defined and acemenu_install_type_user == True
 
 - name: "ensure for remote users bin-acemenu directory"
-  become: '{{ acemenu_deployment_user }}'
+  become: True
   file:
     state : 'directory'
     path  : '{{ item.value.home }}/{{ acemenu_bin_dir }}'
@@ -21,7 +21,7 @@
 # ensure helpfiles dir
 
 - name: "ensure for remote users bin/acemenu/helpfiles directory"
-  become: '{{ acemenu_deployment_user }}'
+  become: True
   file   :
     state   : 'directory'
     path    : '{{ item.value.home }}/{{ acemenu_help_dir }}'
@@ -34,7 +34,7 @@
 # ensure for menu.sh script
 
 - name: "when ansible_distribution == Ubuntu, template our menu script"
-  become: '{{ acemenu_deployment_user }}'
+  become: True
   template :
     backup   : yes
     src      : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.sh.j2'
@@ -46,7 +46,7 @@
   when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
 - name: 'when ansible_distribution == "Ubuntu", template our menu items'
-  become: '{{ acemenu_deployment_user }}'
+  become: True
   template:
     backup  : yes
     src     : '{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menuitems.j2'
@@ -58,7 +58,7 @@
   when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
 - name: 'when ansible_distribution == "CentOS", template our menu items'
-  become: '{{ acemenu_deployment_user }}'
+  become: True
   template:
     backup  : yes
     src     : '{{ ansible_distribution }}/{{ ansible_distribution_major_version }}/acemenu/menuitems.j2'
@@ -72,7 +72,7 @@
 # helpfiles
 
 - name: 'copy over our CentOS help files'
-  become: '{{ acemenu_deployment_user }}'
+  become: True
   copy:
     backup  : no
     force   : yes # overwrites any existing file(s).
@@ -85,7 +85,7 @@
   when: ansible_distribution == "CentOS" and acemenu_install_type_user == True
 
 - name: 'copy over our Ubuntu help files'
-  become: '{{ acemenu_deployment_user }}'
+  become: True
   copy:
     directory_mode : yes
     backup  : no
@@ -102,7 +102,7 @@
 # Create menu symlink
 
 - name: "Create symlink ~/bin/menu that points to ~/bin/acemenu/menu.sh"
-  become: '{{ acemenu_deployment_user }}'
+  become: True
   file:
     state : 'link'
     src   : '{{ item.value.home }}/{{ acemenu_bin_dir }}/menu.sh'
@@ -165,7 +165,7 @@
 #  when: ansible_distribution == "CentOS" 
 
 - name: "ensure for ~/.bash_aliases"
-  become: '{{ acemenu_deployment_user }}'
+  become: True
   file:
     state   : 'touch'
     path    : '{{ item.value.home }}/.bash_aliases'
@@ -176,7 +176,7 @@
   when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
 - name: "ensure for menu message block in ~/.bash_aliases"
-  become: '{{ acemenu_deployment_user }}'
+  become: True
   blockinfile:
     dest    : '{{ item.value.home }}/.bash_aliases'
     owner   : '{{ item.value.owner }}'

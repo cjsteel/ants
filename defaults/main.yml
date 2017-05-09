@@ -9,7 +9,7 @@ acemenu_version_pinning  : false       # not in use at this time
 acemenu_role_name    : 'acemenu'       # not in use at this time
 acemenu_state        : 'present'
 acemenu_install_type : 'skel'
-acemenu_install_type_user : False #True  # If you wnat to install on per user basis as well
+acemenu_install_type_user : True  # If you wnat to install on per user basis as well
 acemenu_target_user: 'csteel'
 
 # user installs
