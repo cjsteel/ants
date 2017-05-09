@@ -22,6 +22,7 @@
 
   vars:
 
+    - acemenu_remote_user       : 'ubuntu'
     - acemenu_debug             : true        # not used at this time
 
     - acemenu_version            : '0.0.1'
@@ -31,7 +32,7 @@
     - acemenu_state             : 'present'
     - acemenu_install_type      : 'skel'
 #    - acemenu_install_type_user : True  # If you wnat to install on per user basis as well
-
+    - acemenu_target_user: 'csteel'
     # user installs
 
     - acemenu_deployment_user : 'ubuntu'
@@ -53,7 +54,7 @@
 
     - acemenu_user_homes:
 
-       user_ubuntu:
+        realuser_home_1:
 
           home : '/home/{{ acemenu_remote_user }}'
           owner: '{{ acemenu_remote_user }}'

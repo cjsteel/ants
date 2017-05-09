@@ -5,9 +5,9 @@
 
 - name: "  debug: var=user_homes"
   debug: var=acemenu_user_homes
-  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
+  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user is defined and acemenu_install_type_user == True
 
-- name: "ensure for remote users bin/acemenu directory"
+- name: "ensure for remote users bin-acemenu directory"
   become: '{{ acemenu_deployment_user }}'
   file:
     state : 'directory'
