@@ -9,12 +9,12 @@ acemenu_version_pinning  : false       # not in use at this time
 acemenu_role_name    : 'acemenu'       # not in use at this time
 acemenu_state        : 'present'
 acemenu_install_type : 'skel'
-acemenu_install_type_user : True  # If you wnat to install on per user basis as well
+acemenu_install_type_user : False #True  # If you wnat to install on per user basis as well
 acemenu_target_user: 'csteel'
 
 # user installs
 
-acemenu_deployment_user : '{{ project_deployment_user }}'
+acemenu_deployment_user: '{{ project_deployment_user_name }}'
 acemenu_uid_min         : 1000
 acemenu_uid_max         : 1000
 
@@ -28,9 +28,9 @@ acemenu_help_dir        : '{{ acemenu_bin_dir }}/helpfiles'
 #fsl_profile_blank_path : 'roles/{{ fsl_role_name }}/files/profile'
 # files
 
-acemenu_menu_template_src    : '../templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.sh.j2'
-acemenu_menuitems_blank_path : '{{ acemenu_bin_dir }}/menuitems.txt'
-acemenu_about_description_path : '{{ acemenu_bin_dir }}/helpfiles/about.txt'
+acemenu_menu_template_src      : '{{ fact_role_path }}/templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.sh.j2'
+acemenu_menuitems_blank_path   : '{{ fact_role_path }}/templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menuitems.j2'
+acemenu_about_description_path : '{{ fact_role_path }}/templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/helpfiles/about.txt'
 
 acemenu_user_homes:
 
