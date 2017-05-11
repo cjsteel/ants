@@ -9,7 +9,7 @@ acemenu_version_pinning  : false       # not in use at this time
 acemenu_role_name    : 'acemenu'       # not in use at this time
 acemenu_state        : 'present'
 acemenu_install_type : 'skel'
-acemenu_install_type_user : True  # If you wnat to install on per user basis as well
+acemenu_install_type_user : False #True  # If you wnat to install on per user basis as well
 acemenu_target_user: 'csteel'
 
 # user installs
@@ -25,7 +25,6 @@ acemenu_personal_bin    : 'bin'
 acemenu_bin_dir         : '{{ acemenu_personal_bin }}/acemenu'
 acemenu_help_dir        : '{{ acemenu_bin_dir }}/helpfiles'
 
-#fsl_profile_blank_path : 'roles/{{ fsl_role_name }}/files/profile'
 # files
 
 acemenu_menu_template_src      : '{{ fact_role_path }}/templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.sh.j2'
