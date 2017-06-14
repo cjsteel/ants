@@ -6,7 +6,9 @@ acemenu
 
 An Ansible role that installs a basic terminal based menu system. The role figures users home directories and works in LDAP environments as well.
 
-The role can be configured to targets users within a specific range of UID's.
+The role sets up a sym link in `/etc/skel/bin/menu` pointing to `/etc/skel/bin/acemenu/menu.sh`
+
+The role can be configured to targets users within a specific range of UID's. (not enabled)
 
 **IMPORTANT** - an `echo` command in ~/.bashrc or ~/.bash_aliases on CentOS 7 prevents Ansilbe from connecting. Further investigation is required
 
@@ -245,6 +247,46 @@ If rerunning the role results in the following error ensure that you have not ad
 
     PLAY RECAP *********************************************************************
     web                        : ok=0    changed=0    unreachable=1    failed=0
+
+## Testing
+
+### Vagrant
+
+#### enable ansible env if using
+
+```shell
+source activate ansible
+```
+
+#### Create synced directory
+
+```shell
+mkdir -p .vagrant/synced
+```
+
+### add user
+
+```shell
+sudo adduser --home /home/mgladis -c "M Gladis" mgladis
+```
+
+### confirm changes
+
+```shell
+sudo su mgladis
+cd
+sudo ls -al /etc/skel/bin
+sudo ls -al /home/mgladis/bin
+source ~/.profile
+menu
+```
+
+### remove user
+
+```shell
+sudo deluser --remove-home mgladis
+```
+
 
 
 License

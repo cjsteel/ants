@@ -45,6 +45,8 @@
   with_dict: '{{ acemenu_user_homes }}'
   when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
+# Ubuntu - template menu items
+
 - name: 'when ansible_distribution == "Ubuntu", template our menu items'
   become: True
   template:
@@ -56,6 +58,8 @@
     mode    : '{{ item.value.mode }}'
   with_dict : '{{ acemenu_user_homes }}'
   when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
+
+# CentOS - template menu items
 
 - name: 'when ansible_distribution == "CentOS", template our menu items'
   become: True
@@ -69,7 +73,7 @@
   with_dict: "{{ acemenu_user_homes }}"
   when: ansible_distribution == "CentOS" and acemenu_install_type_user == True
 
-# helpfiles
+# CentOS helpfiles
 
 - name: 'copy over our CentOS help files'
   become: True
@@ -83,6 +87,8 @@
     mode    : '{{ item.value.mode }}'
   with_dict : "{{ acemenu_user_homes }}"
   when: ansible_distribution == "CentOS" and acemenu_install_type_user == True
+
+# Ubuntu helpfiles
 
 - name: 'copy over our Ubuntu help files'
   become: True
@@ -98,20 +104,28 @@
   with_dict : "{{ acemenu_user_homes }}"
   when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
-
 # Create menu symlink
 
 - name: "Create symlink ~/bin/menu that points to ~/bin/acemenu/menu.sh"
   become: True
-  file:
-    state : 'link'
-    src   : '{{ item.value.home }}/{{ acemenu_bin_dir }}/menu.sh'
-    dest  : '{{ item.value.home }}/{{ acemenu_personal_bin }}/menu'
-    owner : '{{ item.value.owner }}'
-    group : '{{ item.value.group }}'
-    mode  : '{{ item.value.mode }}'
-  with_dict : "{{ acemenu_user_homes }}"
-  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
+  command: ln -s acemenu/menu.sh menu
+  args:
+    chdir  : '/etc/skel/bin'
+    creates: '/etc/skel/bin/menu'
+  when: ansible_distribution == "Ubuntu"
+# Create menu symlink
+
+#- name: "Create symlink ~/bin/menu that points to ~/bin/acemenu/menu.sh"
+#  become: True
+#  file:
+#    state : 'link'
+#    src   : '{{ item.value.home }}/{{ acemenu_bin_dir }}/menu.sh'
+#    dest  : '{{ item.value.home }}/{{ acemenu_personal_bin }}/menu'
+#    owner : '{{ item.value.owner }}'
+#    group : '{{ item.value.group }}'
+#    mode  : '{{ item.value.mode }}'
+#  with_dict : "{{ acemenu_user_homes }}"
+#  when: ansible_distribution == "Ubuntu" and acemenu_install_type_user == True
 
 # Configuration files
 

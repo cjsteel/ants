@@ -32,11 +32,11 @@ dependencies:
         mode : '0755'
         state: 'template' # options are 'template' or 'absent'
 
-      - name : 'template /etc/skel/bin/acemenu/menu.sh'
-        path : '/etc/skel/{{ acemenu_personal_bin }}/menu'
-        src  : '/etc/skel/{{ acemenu_bin_dir }}/menu.sh'
-        mode : '0755'
-        state: 'link' # options are 'template' or 'absent'
+      - name : 'create relative link to acemenu/menu.sh'
+        link_name   : 'menu'
+        link_target : 'acemenu/menu.sh'
+        link_dir    : '/etc/skel/bin'
+        state: 'relative_link'
 
 
 galaxy_info:

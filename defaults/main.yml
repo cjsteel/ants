@@ -22,6 +22,7 @@ acemenu_uid_max         : 1000
 # directories
 
 acemenu_personal_bin    : 'bin'
+acemenu_dir_name        : 'acemenu'
 acemenu_bin_dir         : '{{ acemenu_personal_bin }}/acemenu'
 acemenu_help_dir        : '{{ acemenu_bin_dir }}/helpfiles'
 

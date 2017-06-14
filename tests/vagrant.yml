@@ -42,13 +42,18 @@
     # directories
 
     - acemenu_personal_bin    : 'bin'
+    - acemenu_dir_name        : 'acemenu'
     - acemenu_bin_dir         : '{{ acemenu_personal_bin }}/acemenu'
     - acemenu_help_dir        : '{{ acemenu_bin_dir }}/helpfiles'
 
-    #- fsl_profile_blank_path : 'roles/{{ fsl_role_name }}/files/profile'
+    - fsl_profile_blank_path : 'roles/{{ fsl_role_name }}/files/profile'
+
 # files
 
     - acemenu_menu_template_src    : '../templates/{{ ansible_distribution }}/{{ ansible_distribution_version }}/acemenu/menu.sh.j2'
+
+# why cant these be removed?
+
     - acemenu_menuitems_blank_path   : '../files/acemenu/menuitems.txt'
     - acemenu_about_description_path : '../files/acemenu/helpfiles/about.txt'
 
