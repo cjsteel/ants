@@ -267,19 +267,22 @@ source activate ansible
 mkdir -p .vagrant/synced
 ```
 
+#### Confirm changes to skel
+
+```shell
+sudo ls -al /etc/skel/bin
+```
+
 ### add user
 
 ```shell
 sudo adduser --home /home/test_user -c "test user" test_user
 ```
 
-### confirm changes
+### test
 
 ```shell
 sudo su - test_user
-cd
-sudo ls -al /etc/skel/bin
-sudo ls -al /home/test_user/bin
 source ~/.profile
 menu
 ```
@@ -287,7 +290,7 @@ menu
 ### remove user
 
 ```shell
-sudo deluser --remove-home mgladis
+sudo deluser --remove-home test_user
 ```
 
 

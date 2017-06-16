@@ -45,7 +45,7 @@ dependencies:
         link_dir    : '/etc/skel/bin'
         state: 'relative_link'
 
-  - role: ansible-role-clone
+  - role: clone
     become: true
     tags: ['acemenu', 'skel']
 
