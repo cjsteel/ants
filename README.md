@@ -17,16 +17,19 @@ Requirements
 ------------
 
 * Ansible version 2.0.
-
     * Makes use of `blockinfile` extras module
 
-### Installing
+### Installing ansible Via miniconda
 
-#### Via miniconda
+```shell
+conda create --name ansible -c kbroughton ansible=2.0.0.2
+source activate ansible
+```
 
-    conda create --name ansible -c kbroughton ansible=2.0.0.2
-    source activate ansible
+### Dependencies
 
+* https://github.com/cjsteel/ansible-role-clone
+* https://github.com/cjsteel/ansible-role-skel
 
 Role Variables
 --------------
@@ -150,7 +153,7 @@ nano host_vars/host-01/acemenu/defaults.yml
 Dependencies
 ------------
 
-None at this time.
+* skelNone at this time.
 
 Inventory example
 -----------------
@@ -267,16 +270,16 @@ mkdir -p .vagrant/synced
 ### add user
 
 ```shell
-sudo adduser --home /home/mgladis -c "M Gladis" mgladis
+sudo adduser --home /home/test_user -c "test user" test_user
 ```
 
 ### confirm changes
 
 ```shell
-sudo su mgladis
+sudo su - test_user
 cd
 sudo ls -al /etc/skel/bin
-sudo ls -al /home/mgladis/bin
+sudo ls -al /home/test_user/bin
 source ~/.profile
 menu
 ```
