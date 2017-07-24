@@ -1,5 +1,6 @@
 # temp files
 *~
+.swp
 .vagrant
 vagrant.retry
 *.log
