@@ -44,11 +44,11 @@ dependencies:
 #        mode : '0755'
 #        state: 'template' # options are 'template' or 'absent'
 
-#      - name : 'create relative link to acemenu/menu.sh'
-#        link_name   : 'menu'
-#        link_target : 'acemenu/menu.sh'
-#        link_dir    : '/etc/skel/bin'
-#        state: 'relative_link'
+      - name : 'create relative link to acemenu/menu.sh'
+        link_name   : 'menu'
+        link_target : 'acemenu/menu.sh'
+        link_dir    : '/etc/skel/bin'
+        state: 'relative_link'
 
 #  - role: clone
 #    become: true
