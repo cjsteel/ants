@@ -5,9 +5,7 @@ dependencies:
     tags: ['acemenu', 'skel']
     skel_entries:
 
-# does the following get created if /etc/skel/bin does not exist?
-
-      - name: "Ensure for acemenu help directory in /etc/skel/bin"
+      - name: "Ensure for directory /etc/skel/bin"
         path  : '/etc/skel/bin'
         user  : 'root'
         group : 'root'
@@ -19,54 +17,11 @@ dependencies:
         dest  : '/etc/skel/bin/acemenu'
         clone : yes
 
-#      - name: "Ensure for acemenu help directory in /etc/skel/bin"
-#        path  : '/etc/skel/{{ acemenu_help_dir }}'
-#        user  : 'root'
-#        group : 'root'
-#        mode: '0755'
-#        state: 'directory' # options are 'directory' or 'absent'
-
-#      - name : "ensure for /etc/skel/bin/acemenu/menuitems.txt"
-#        path : '/etc/skel/bin/acemenu/menuitems.txt'
-#        src  : '{{ acemenu_menuitems_blank_path }}'
-#        force : no
-#        state: "copy"
-
-#      - name : "ensure for /etc/skel/bin/acemenu/about.txt"
-#        path : '/etc/skel/{{ acemenu_help_dir }}/about.txt'
-#        src  : '{{ acemenu_about_description_path }}'
-#        force : no
-#        state: "copy"
-
-#      - name : 'template /etc/skel/bin/acemenu/menu.sh'
-#        src  : '{{ acemenu_menu_template_src }}'
-#        path : '/etc/skel/{{ acemenu_bin_dir }}/menu.sh'
-#        mode : '0755'
-#        state: 'template' # options are 'template' or 'absent'
-
       - name : 'create relative link to acemenu/menu.sh'
         link_name   : 'menu'
         link_target : 'acemenu/menu.sh'
         link_dir    : '/etc/skel/bin'
         state: 'relative_link'
-
-#  - role: clone
-#    become: true
-#    tags: ['acemenu', 'skel']
-
-#    clone_remote_user : 'ubuntu'
-#    clone_state         : 'present'
-#    clone_update        : 'yes'
-#    clone_build         : false
-#    clone_reboot_target : false
-#    clone_project_accept_hostkey  : 'yes'
-#    clone_repo_version  : '0.0.1'
-  #    - clone_src_repo_url : 'git@github.com:cjsteel/ansible-role-clone.git'
-#    clone_src_repo_url  : 'https://github.com/cjsteel/script-bash-acemenu.git'
-
-#    clone_target_parent_dir       : '/etc/skel/bin' #'~/bin'
-#    clone_repo_target_dir         : 'acemenu'
-#    clone_target_destination_path : '/etc/skel/bin/acemenu' #~/bin/acemenu'
 
 galaxy_info:
   author: Christopher Steel
