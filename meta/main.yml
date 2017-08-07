@@ -24,10 +24,11 @@ dependencies:
 # ensure for any touch'es ro files
 
 # ensure for any file copies
-
+# notice that the following command looks for .bash_aliases in the skel roles files directory.
       - name : "ensure for /etc/skel/.bash_aliases"
         path : '/etc/skel/.bash_aliases'
-        src  : 'files/bash_aliases'
+        src : 'files/Ubuntu/16.04/etc/skel/.bash_aliases'
+#        src  : 'files/bash_aliases'
         force : no
         state: "copy"
 
