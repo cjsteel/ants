@@ -5,6 +5,8 @@ dependencies:
     tags: ['acemenu', 'skel']
     skel_entries:
 
+# ensure for directories
+
       - name: "Ensure for directory /etc/skel/bin"
         path  : '/etc/skel/bin'
         user  : 'root'
@@ -12,10 +14,58 @@ dependencies:
         mode: '0755'
         state: 'directory' # options are 'directory' or 'absent'
 
+# ensure for any clones
+
       - name : "git clone /etc/skel/bin/acemenu repository"
         repo  : 'https://github.com/cjsteel/script-bash-acemenu.git'
         dest  : '/etc/skel/bin/acemenu'
         clone : yes
+
+# ensure for any touch'es ro files
+
+# ensure for any file copies
+
+      - name : "ensure for /etc/skel/.bash_aliases"
+        path : '/etc/skel/.bash_aliases'
+        src  : 'files/bash_aliases'
+        force : no
+        state: "copy"
+
+# ensure for any templates
+
+#      - name : 'template /etc/skel/bin/acemenu/menu.sh'
+#        src  : '{{ acemenu_menu_template_src }}'
+#        path : '/etc/skel/{{ acemenu_bin_dir }}/menu.sh'
+#        mode : '0755'
+#        state: 'template' # options are 'template' or 'absent'
+
+# ensure for any blockinfile's
+
+      - name: "ensure for /etc/skel/.bash_aliases entry"
+        type: 'blockinfile'
+        marker: '## {mark} ANSIBLE MANAGED BLOCK in .bash_aliases entry for acemenu'
+        path  : "/etc/skel/.bash_aliases"
+        insertafter: "EOF"
+        block: |
+          # inform user about acemenu
+          # 
+          echo "type "menu" for latest ace menu options"
+          #
+        state: "present"
+
+#      - name: "ensure add ~/bin and ~/.local/bin to users path"
+#        type: 'blockinfile'
+#        marker: '## {mark} ANSIBLE MANAGED BLOCK in .bash_aliases entry for myrepos'
+#        path  : "/etc/skel/.bash_aliases"
+#        insertafter: "EOF"
+#        block: |
+#          #
+#          # set PATH so it includes user's private bin directories
+#          PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+#          #
+#        state: "present"
+
+# ensure for any non relative sym links
 
       - name : 'create relative link to acemenu/menu.sh'
         link_name   : 'menu'

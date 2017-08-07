@@ -19,7 +19,7 @@ Requirements
 * Ansible version 2.0.
     * Makes use of `blockinfile` extras module
 
-### Installing ansible Via miniconda
+### Installing Ansible Via miniconda
 
 ```shell
 conda create --name ansible -c kbroughton ansible=2.0.0.2
@@ -125,12 +125,6 @@ dependencies:
         mode:  '0755'
         state: 'template' # options are 'template' or 'absent'
 ```
-
-
-
-
-
-
 
 ### host_vars
 
@@ -253,18 +247,16 @@ If rerunning the role results in the following error ensure that you have not ad
 
 ## Testing
 
-### Vagrant
-
-#### enable ansible env if using
+#### Start Vagrant
 
 ```shell
-source activate ansible
+vagrant up --provision
 ```
 
-#### Create synced directory
+### Connect to vm
 
 ```shell
-mkdir -p .vagrant/synced
+vagrant ssh
 ```
 
 #### Confirm changes to skel
@@ -273,7 +265,7 @@ mkdir -p .vagrant/synced
 sudo ls -al /etc/skel/bin
 ```
 
-### add user
+### add test user
 
 ```shell
 sudo adduser --home /home/test_user -c "test user" test_user
@@ -289,11 +281,11 @@ menu
 
 ### remove user
 
+If running multiple tests
+
 ```shell
 sudo deluser --remove-home test_user
 ```
-
-
 
 License
 -------
