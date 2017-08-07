@@ -1,0 +1,39 @@
+## Create new acemenu item
+
+#- name: "copy help file contents to acemenu"
+#  become: true
+#  copy:
+#    src  : 'files/myrepos_help_contents.txt'
+#    dest : '/etc/skel/bin/acemenu/help/myrepos.txt'
+#    owner: root
+#    group: root
+#    mode : '0755'
+
+#- name: "add myrepos to acemenu"
+#  become: true
+#  lineinfile:
+#    path: '/etc/skel/bin/acemenu/items.txt'
+#    state: present
+#    regexp: '^%myrepos'
+#    line: 'myrepos'
+
+#- name: "sort acemenu menu file items.txt"
+#  become: true
+#  command: sort items.txt > items_sorted.txt
+#  args:
+#    chdir: '/etc/skel/bin/acemenu/'
+#    creates: /etc/skel/bin/acemenu/items_sorted.txt
+
+#- name: "create sorted acemenu menu file items.txt"
+#  become: true
+#  command: cat items_sorted.txt > items.txt
+#  args:
+#    chdir: '/etc/skel/bin/acemenu/'
+#    creates: /etc/skel/bin/acemenu/items_sorted.txt
+
+#- name: "delete acemenu menu file items_sorted.txt"
+#  become: true
+#  command: rm items_sorted.txt
+#  args:
+#    chdir: '/etc/skel/bin/acemenu/'
+
