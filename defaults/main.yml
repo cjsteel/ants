@@ -6,15 +6,16 @@ acemenu_debug            : true        # not used at this time
 acemenu_version          : '0.0.1'
 acemenu_version_pinning  : false       # not in use at this time
 
-acemenu_role_name    : 'acemenu'       # not in use at this time
-acemenu_state        : 'present'
-acemenu_install_type : 'skel'
-acemenu_install_type_user : False #True  # If you wnat to install on per user basis as well
-acemenu_target_user: 'csteel'
+
+acemenu_role_name         : 'acemenu'       # not in use at this time
+acemenu_state             : 'present'
+acemenu_install_type      : 'skel'
+acemenu_install_type_user : False #True  # If you want to install on per user basis as well
+acemenu_target_user       : 'csteel'
 
 # user installs
 
-acemenu_deployment_user: '{{ project_deployment_user_name }}'
+acemenu_deployment_user : '{{ project_deployment_user_name }}'
 acemenu_uid_min         : 1000
 acemenu_uid_max         : 1000
 
